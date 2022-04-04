@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf=8">
+		<title>Mainpage</title>
+		<meta name="viewpoint" content="width-device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+		<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+		<style>
+			table, th, td{ border: 1px solid black; }
+			body {
+					  margin: 0;
+					  font-family: Arial, Helvetica, sans-serif;
+					}
+
+					.topnav {
+					  overflow: hidden;
+					  background-color: #333;
+					}
+
+					.topnav a {
+					  float: left;
+					  color: #f2f2f2;
+					  text-align: center;
+					  padding: 14px 16px;
+					  text-decoration: none;
+					  font-size: 17px;
+					}
+
+					.topnav a:hover {
+					  background-color: #ddd;
+					  color: black;
+					}
+
+					.topnav a.active {
+					  background-color: #04AA6D;
+					  color: white;
+					}
+
+					.topnav-right {
+					  float: right;
+					}
+					.topnav span {
+					float: left;
+					color: #f2f2f2;
+					text-align: center;
+					padding: 14px 16px;
+					text-decoration: none;
+					font-size: 17px;
+					}
+		</style>
+	</head>
+	<body>
+		<head>
+			<div class="topnav">
+				{% if cur_usr.is_admin == True %}
+					<span class="navbar-brand">Home</span>
+					<div class="topnav-right">
+						<span class="navbar-brand">{{cur_usr.cur_usr_name}}</span>
+						<a href="/logout">Logout</a>
+					</div>
+				{% else %}
+					<span class="navbar-brand">Home</span>
+					<div class="topnav-right">
+						<span class="navbar-brand">{{cur_usr.cur_usr_name}}</span>
+						<a href="/logout">Logout</a>
+					</div>
+				{% endif %}
+			</div>
+		</head>
+		
+		<a href="/homepage/create" class="btn btn-default" role="button" style="font-size: 17px; float: left; text-align: center; padding: 13px 16px;">create</a>
+		<h2 style="width:100px; margin:0 auto; font-size: 50">会计</h2>
+		
+		<table class="center" style="width:100%">
+			<thead style="text-align: center; background-color:#BDBDBD;">
+				<tr>
+					{% if cur_usr.is_admin == True %}
+						<th>Line id</th>
+						<th>Write id</th>
+						<th>Display id</th>
+					{% endif %}
+					<th>Item</th>
+					{% if cur_usr.is_admin == True %}
+						<th>User</th>
+					{% endif %}
+						<th>Description</th>
+						<th>Income</th>
+						<th>Outcome</th>
+						<th>Remain</th>
+						<th>Issue date</th>
+					{% if cur_usr.is_admin == True %}
+						<th>修改</th>
+					{% endif %}
+				</tr>
+			</thead>
+			<tbody style="text-align: center">
+				{% for i in final_data %}
+					<tr>
+						{% if cur_usr.is_admin == True %}
+							<td>lid:{{i.id}}</td>
+							<td>uid:{{i.user_id}}</td>
+							<td>did:{{i.display_user_id}}</td>
+						{% endif %}
+						<td>{{i.item}}</td>
+						{% if cur_usr.is_admin == True %}
+							<td>{{i.user_name}}</td>
+						{% endif %}
+						<td>{{i.description}}</td>
+						<td>{{'%0.2f'| format(i.income|float)}}</td>
+						<td>{{'%0.2f'| format(i.outcome|float)}}</td>
+						<td>{{'%0.2f'| format(i.remain|float)}}</td>
+						<td>{{i.date}}</td>
+						{% if cur_usr.is_admin == True %}
+							<td style="width:10%">
+								<a class="btn btn-warning btn-sm" href="/homepage/edit/lid={{i.id}}" method="post">[edit]</a>
+								<span> | </span>
+								<a class="btn btn-danger btn-sm" href="/homepage/delete/{{i.id}}" method="get">[delete]</a>
+							</td>
+						{% endif %}
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</body>
+</html>

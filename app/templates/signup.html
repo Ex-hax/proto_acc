@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf=8">
+		<title>signup</title>
+		<meta name="viewpoint" content="width-device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<div class="container" style="align-items: center">
+			<p style="font-size:50px">Sign up</p>
+			<div class="row">
+				<div class="col-lg-5">
+					<form class="form-group" action="/signup/regis" method="post">
+						<div>
+							<label for="username">Username</label>
+							<input type="text" name="username" placeholder="username" class="form-control" required></input>
+						</div>
+						<br/>
+						<div>
+							<label for="password">Password</label>
+							<input type="password" name="password" placeholder="password" class="form-control" required></input>
+						</div>
+						<br/>
+						<div>
+							<label for="email">E-mail</label>
+							<input type="text" name="email" placeholder="email" class="form-control" required></input>
+						</div>
+						<br/>
+							<button type="submit" class="btn btn-secondary">Confirm</button>
+						<br/>
+							{% with messages = get_flashed_messages(with_categories=true) %}
+								{% if messages %}
+									{% for category, message in messages %}
+										<div class="alert alert-{{message.0.0}}" role="alert" style="color:red">
+											{{ message }}<br/>
+										</div>							
+									{% endfor %}
+								{% endif %}
+							{% endwith %}
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
