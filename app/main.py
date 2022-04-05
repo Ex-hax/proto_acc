@@ -241,9 +241,8 @@ def update():
 		update_data.income = request.form['income']
 		update_data.outcome = request.form['outcome']
 		update_data.remain = request.form['remain']
-		update_data.dateissue = datetime.fromisoformat(request.form['dateissue'])#datetime.strptime(request.form['dateissue'],'%Y-%m-%d %H:%M:%S')
+		update_data.idate = datetime.fromisoformat(request.form['dateissue'])
 		update_data.description = request.form['des']
-		print(update_data.dateissue)
 		db.session.add(update_data)
 		db.session.commit()
 		
