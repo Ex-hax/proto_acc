@@ -55,38 +55,30 @@
 	<body>
 		<head>
 			<div class="topnav">
-				{% if cur_usr.is_admin == True %}
-					<span class="navbar-brand">Home</span>
-					<div class="topnav-right">
-						<span class="navbar-brand">{{cur_usr.cur_usr_name}}</span>
-						<a href="/logout">Logout</a>
-					</div>
-				{% else %}
-					<span class="navbar-brand">Home</span>
-					<div class="topnav-right">
-						<span class="navbar-brand">{{cur_usr.cur_usr_name}}</span>
-						<a href="/logout">Logout</a>
-					</div>
-				{% endif %}
+				<span class="navbar-brand">Home</span>
+				<div class="topnav-right">
+					<span class="navbar-brand">{{cur_usr.cur_usr_name}}</span>
+					<a href="/logout">Logout</a>
+				</div>
 			</div>
 		</head>
 		
 		<a href="/homepage/create" class="btn btn-default" role="button" style="font-size: 17px; float: left; text-align: center; padding: 13px 16px;">create</a>
 		<h2 style="width:100px; margin:0 auto; font-size: 50">会计</h2>
 		
-		<table class="center" style="width:100%">
+		<table class="center" style="width: 100%; word-wrap:break-word; table-layout: fixed;">
 			<thead style="text-align: center; background-color:#BDBDBD;">
 				<tr>
 					{% if cur_usr.is_admin == True %}
-						<th>Line id</th>
-						<th>Write id</th>
-						<th>Display id</th>
+						<th style="width: 5%">Line id</th>
+						<th style="width: 5%">Write id</th>
+						<th style="width: 5%">Dis id</th>
 					{% endif %}
-					<th>Item</th>
+					<th style="width: 5%">Item</th>
 					{% if cur_usr.is_admin == True %}
 						<th>User</th>
 					{% endif %}
-						<th>Description</th>
+						<th style="width: 20%">Description</th>
 						<th>Income</th>
 						<th>Outcome</th>
 						<th>Remain</th>
@@ -111,7 +103,11 @@
 						<td>{{i.description}}</td>
 						<td>{{'%0.2f'| format(i.income|float)}}</td>
 						<td>{{'%0.2f'| format(i.outcome|float)}}</td>
-						<td>{{'%0.2f'| format(i.remain|float)}}</td>
+						{% if 0 > i.remain|float %}
+							<td style="color:red">{{'%0.2f'| format(i.remain|float)}}</td>
+						{% else %}
+							<td>{{'%0.2f'| format(i.remain|float)}}</td>
+						{% endif %}
 						<td>{{i.date}}</td>
 						{% if cur_usr.is_admin == True %}
 							<td style="width:10%">

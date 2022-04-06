@@ -185,7 +185,7 @@ def homepage():
 	'remain' : i.remain,
 	'description' : i.description
 	} for i in datas]
-
+	
 	return render_template('index.html',cur_usr = uid,final_data=final_data)
 	
 '''For create new data'''
@@ -247,7 +247,7 @@ def update():
 		db.session.commit()
 		
 	return redirect(url_for('homepage'))
-	
+'''For delete'''	
 @app.route('/homepage/delete/<line_id>',methods=['GET'])
 @login_required 
 def delete(line_id):
@@ -255,8 +255,7 @@ def delete(line_id):
 	db.session.delete(u)
 	db.session.commit()
 	return redirect(url_for('homepage'))
-'''For delete'''	
-
+'''report'''
 '''Database part'''
 @app.cli.command('cli')
 @click.argument('cr')
