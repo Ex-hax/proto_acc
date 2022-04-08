@@ -7,26 +7,39 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<style>
+			.container {
+			position: absolute;
+			width: 350px;
+			height: 300px;
+			z-index: 15;
+			display: flex;
+			justify-content: center;
+			top: 50%;
+			left: 50%;
+			margin: -210px 0 0 -150px;
+			}
+		</style>
 	</head>
 	<body>
-		<div class="container" style="align-items: center">
-			<p style="font-size:50px">Sign up</p>
-			<div class="row">
-				<div class="col-lg-5">
+		<div class="container">
+			<div class="center">
+				<p style="font-size:50px; text-align: center;">Sign up</p>
+				<div class="center">
 					<form class="form-group" action="/signup/regis" method="post">
 						<div>
 							<label for="username">Username</label>
-							<input type="text" name="username" placeholder="username" class="form-control" required></input>
+							<input type="text" name="username" placeholder="username" class="form-control" required style="width: 350px;"></input>
 						</div>
 						<br/>
 						<div>
 							<label for="password">Password</label>
-							<input type="password" name="password" placeholder="password" class="form-control" required></input>
+							<input type="password" name="password" placeholder="password" class="form-control" required style="width: 350px;"></input>
 						</div>
 						<br/>
 						<div>
 							<label for="email">E-mail</label>
-							<input type="text" name="email" placeholder="email" class="form-control" required></input>
+							<input type="text" name="email" placeholder="email" class="form-control" required style="width: 350px;"></input>
 						</div>
 						<br/>
 							<button type="submit" class="btn btn-secondary">Confirm</button>
