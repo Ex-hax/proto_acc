@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf=8">
+		<title>Mainpage</title>
+		<meta name="viewpoint" content="width-device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+		<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+		<style>
+			table, th, td{ border: 1px solid black; }
+			body {
+					  margin: 0;
+					  font-family: Arial, Helvetica, sans-serif;
+					}
+
+					.topnav {
+					  overflow: hidden;
+					  background-color: #333;
+					}
+
+					.topnav a {
+					  float: left;
+					  color: #f2f2f2;
+					  text-align: center;
+					  padding: 14px 16px;
+					  text-decoration: none;
+					  font-size: 17px;
+					}
+
+					.topnav a:hover {
+					  background-color: #ddd;
+					  color: black;
+					}
+
+					.topnav a.active {
+					  background-color: #04AA6D;
+					  color: white;
+					}
+
+					.topnav-right {
+					  float: right;
+					}
+					.topnav span {
+					float: left;
+					color: #f2f2f2;
+					text-align: center;
+					padding: 14px 16px;
+					text-decoration: none;
+					font-size: 17px;
+					}
+		</style>
+	</head>
+	<body>
+		<head>
+			<div class="topnav">
+				<a href="/homepage" class="navbar-brand">Home</a>
+				<span>Setting</span>
+				<div class="topnav-right">
+					<span class="navbar-brand">{{cur_usr.cur_usr_name}}</span>
+					<a href="/logout">Logout</a>
+				</div>
+			</div>
+		</head>
+		<form method="post" action="/homepage/setting/change"> 
+			<button class="btn btn-default btn-sm" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" style="font-size: 17px; float: left; text-align: center; padding: 13px 16px;"
+			>save</button>
+					<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+						<div class="modal-dialog modal-lg">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title">Warning</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<p>These setting will replace the exist setting and effect to data majority in the system.</p>
+								</div>
+								<div class="modal-footer">
+									<button type="submit" class="btn btn-success">Save changes</a>
+									<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+								</div>
+							</div>
+						</div>
+					</div>
+			<h2 style="width:100px; margin:0 auto; font-size: 50">Setting</h2>
+			
+			<table class="center" style="width: 100%; word-wrap:break-word; table-layout: fixed;">
+				<thead style="text-align: center; background-color:#BDBDBD;">
+					<tr>
+						<th colspan="6">Users</th>
+					</tr>
+					<tr>
+						<th>user id</th>
+						<th>user name</th>
+						<th>user e-mail</th>
+						<th>Reset password</th>
+						<th>isadmin</th>
+						<th>Delete User Data</th>
+					</tr>
+				</thead>
+				<tbody style="text-align: center">
+				{% for u in udata %}
+					<tr>
+						<td>{{u.user_id}}</td>
+						<input type="hidden" name="user_id" value="{{u.user_id}}">
+						<td>{{u.username}}</td>
+						<td>{{u.user_email}}</td>
+						<td>
+							<input type="text" name="reset_password" value="" maxlength = "27" style="text-align: center; width: 253px;">
+						</td>
+						<td>
+							{% if u.is_admin == True %}
+								{% if u.user_id == 1%}
+									<input type="checkbox" name="is_admin" checked readonly disabled onclick="return false">
+									<input type="hidden" name="oc_is_admin" value="true">
+								{% else %}
+									<input type="checkbox" name="is_admin" checked onclick="return ValidateSelection()">
+									<input type="hidden" name="oc_is_admin" value="true">
+								{% endif %}
+							{% else %}
+								<input type="checkbox" name="is_admin" onclick="return ValidateSelection()">
+								<input type="hidden" name="oc_is_admin" value="false">
+							{% endif %}
+						</td>
+						<td>
+							{% if u.user_id == 1%}
+								<input type="checkbox" name="is_delete" readonly disabled>
+								<input type="hidden" name="oc_is_delete" value="false">
+							{% else %}
+								<input type="checkbox" name="is_delete" onclick="return DeleteUserSelection()">
+								<input type="hidden" name="oc_is_delete" value="false">
+							{% endif %}
+						</td>
+					<tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</form>
+		<script>
+			function ValidateSelection(){
+			var on_check = document.getElementsByName("is_admin");
+			
+			for(var i = 0; i < on_check.length; i++)  
+			{  
+				if (on_check[i].checked){
+					document.getElementsByName("oc_is_admin")[i].value = true;
+				}
+				else{
+					document.getElementsByName("oc_is_admin")[i].value = false;
+			}	
+			} 					
+			}
+			
+			function DeleteUserSelection(){
+			var on_select_delete = document.getElementsByName("is_delete")
+			
+			for(var d = 0; d < on_select_delete.length; d++){
+				
+				if (on_select_delete[d].checked){
+					document.getElementsByName("oc_is_delete")[d].value = true;
+				}
+				else{
+					document.getElementsByName("oc_is_delete")[d].value = false;
+				}
+			}
+			}
+		</script>
+	</body>
+</html>

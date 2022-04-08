@@ -10,21 +10,9 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
 
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.datastructures import ImmutableMultiDict
+
 from datetime import datetime
-
-'''
-Run in seperate terminal while app.py is running
-flask cmd c
-flask db init (first time create date base)
-flask db migrate (tell what change inside)
-flask db upgrade (confirm change in db.Model)
-
-Useful Knowledge
-https://vsupalov.com/flask-sqlalchemy-postgres/
-https://realpython.com/flask-by-example-part-2-postgres-sqlalchemy-and-alembic/
-https://stackabuse.com/using-sqlalchemy-with-flask-and-postgresql/
-https://flask.palletsprojects.com/en/2.0.x/cli/
-'''
 
 app = Flask(__name__)
 
@@ -77,7 +65,7 @@ class iocome(db.Model):
 	id = db.Column(db.Integer, primary_key=True, nullable=False)
 	user_id = db.Column(db.Integer())
 	display_user_id = db.Column(db.Integer())
-	idate = db.Column(db.DateTime(), default=datetime.utcnow) #db.String()
+	idate = db.Column(db.DateTime(), default=datetime.utcnow)
 	item = db.Column(db.Integer())	
 	income = db.Column(db.Float())
 	outcome = db.Column(db.Float())
@@ -158,8 +146,7 @@ def login():
 	
 @app.route('/')
 def to_login():
-	return redirect(url_for('login'))
-
+	return redirect(url_for('login'))	
 '''Home page'''	   
 @app.route('/homepage')
 @login_required
@@ -256,6 +243,56 @@ def delete(line_id):
 	db.session.commit()
 	return redirect(url_for('homepage'))
 '''report'''
+'''setting'''
+@app.route('/homepage/setting')
+@login_required
+def setting():
+	if db.session.query(User).get_or_404(session['_user_id']).is_admin == False: return redirect(url_for('homepage'))
+	uid = {'cur_usr_name' : db.session.query(User).get(session['_user_id']).username}
+	users = db.session.query(User).order_by(User.id.asc()).all()
+	all_users = [{
+	'user_id' : u.id,
+	'username' : u.username,
+	'user_email' : u.email,
+	'is_admin' : u.is_admin
+	} for u in users]
+	return render_template('setting.html',cur_usr=uid,udata=all_users)
+
+@app.route('/homepage/setting/change',methods=['POST'])
+@login_required
+def setting_change():
+	if request.method == 'POST':
+		data = request.form
+		for d in range(len(data.getlist('user_id'))): #admin +- and reset password
+			prepare_user = User.query.get_or_404(int(data.getlist('user_id')[d]))
+			if data.getlist('oc_is_admin')[d] == 'true':
+				prepare_user.is_admin = True
+			else:
+				prepare_user.is_admin = False
+			
+			if data.getlist('reset_password')[d] != '':
+				prepare_user.password = generate_password_hash(data.getlist('reset_password')[d])
+				
+			db.session.add(prepare_user)
+			db.session.commit()
+		
+		for de in range(len(data.getlist('user_id'))): #delete user and data
+			prepare_del_user_data_ids = db.session.query(iocome).filter_by(display_user_id = int(data.getlist('user_id')[de]))
+			
+			prepare_del_user_data_id =[{i.id} for i in prepare_del_user_data_ids]
+			
+			for a in range(len(prepare_del_user_data_id)):
+				if data.getlist('oc_is_delete')[de] == 'true':
+					db.session.delete(iocome.query.get_or_404(prepare_del_user_data_id[a]))
+					db.session.commit()
+
+			prepare_del_user = db.session.query(User).get_or_404(int(data.getlist('user_id')[de]))
+			if data.getlist('oc_is_delete')[de] == 'true':
+				db.session.delete(prepare_del_user)
+				db.session.commit()
+			
+			#create if else to delete data in table users and inoutcome
+		return redirect(url_for('homepage'))		
 '''Database part'''
 @app.cli.command('cli')
 @click.argument('cr')

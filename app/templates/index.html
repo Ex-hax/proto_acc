@@ -56,6 +56,9 @@
 		<head>
 			<div class="topnav">
 				<span class="navbar-brand">Home</span>
+				{%if cur_usr.is_admin == True %}
+					<a href="/homepage/setting">Setting</a>
+				{% endif %}
 				<div class="topnav-right">
 					<span class="navbar-brand">{{cur_usr.cur_usr_name}}</span>
 					<a href="/logout">Logout</a>
